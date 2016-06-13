@@ -1,5 +1,6 @@
 package com.github.keeninvye.soundstack;
 
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -14,7 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    List<Song> Songs = new ArrayList<Song>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +62,25 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        SearchView search = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        //(SearchView) findViewById(R.id.action_search);
+        search.setSubmitButtonEnabled(true);
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Songs.clear();
+                //new RetrieveSongFeed().execute(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -126,8 +153,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show total pages.
+            // CURRENT: 2
+            return 2;
         }
 
         @Override
@@ -137,8 +165,12 @@ public class MainActivity extends AppCompatActivity {
                     return "SECTION 1";
                 case 1:
                     return "SECTION 2";
+
+                //FOR MORE THAN 2 TABS, ADD MORE CASES
+                /*
                 case 2:
                     return "SECTION 3";
+                */
             }
             return null;
         }
