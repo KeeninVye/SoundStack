@@ -1,13 +1,12 @@
 package com.github.keeninvye.soundstack;
 
-import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by keeninvye on 6/13/16.
+ * Created by keeninvye on 6/14/16.
  */
-public class SearchFragment extends Fragment {
+public class PlaylistFragment extends Fragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -27,48 +26,40 @@ public class SearchFragment extends Fragment {
 
     View rootView;
     LayoutInflater searchInflater;
-    ListView listview_search;
-    PlaylistFragment playlist;
-    public List<Song> Songs = new ArrayList<Song>();
+    ListView playlist_listview;
+    public List<Song> Playlist = new ArrayList<Song>();
 
 
-    public SearchFragment() {
+    public PlaylistFragment() {
         super();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         searchInflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_searchlist, container, false);
-        listview_search = (ListView) rootView.findViewById(R.id.listview_search);
+        rootView = inflater.inflate(R.layout.fragment_playlist, container, false);
+        playlist_listview = (ListView) rootView.findViewById(R.id.playlist_listview);
+
         return rootView;
     }
 
     public void addSong(String name, String stream, Bitmap artwork){
-        Songs.add(new Song(name, stream, artwork));
+        Playlist.add(new Song(name, stream, artwork));
     }
 
-    public void populateSearch() {
+    public void addSong(Song song){
+        Playlist.add(song);
+    }
+
+    public void refreshPlaylist() {
         ArrayAdapter<Song> adapter = new SongAdapter();
-        listview_search.setAdapter(adapter);
-        listview_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                Song songToAdd = Songs.get(position);
-                playlist.addSong(songToAdd);
-                playlist.refreshPlaylist();
-            }
-        });
-        Log.d("SEARCH", Songs.toString());
-    }
-
-    public void setPlaylistFragment(PlaylistFragment playlistFragment){
-        playlist = playlistFragment;
+        playlist_listview.setAdapter(adapter);
+        Log.d("SEARCH", Playlist.toString());
     }
 
     public class SongAdapter extends ArrayAdapter<Song> {
         public SongAdapter(){
-            super(getActivity(), R.layout.listview_song, Songs);
+            super(getActivity(), R.layout.listview_song, Playlist);
         }
 
         @Override
@@ -76,7 +67,7 @@ public class SearchFragment extends Fragment {
             if(view == null){
                 view = searchInflater.inflate(R.layout.listview_song, parent, false);
             }
-            Song currentSong = Songs.get(position);
+            Song currentSong = Playlist.get(position);
             TextView title = (TextView) view.findViewById(R.id.title);
             ImageView artwork = (ImageView) view.findViewById(R.id.artwork);
             title.setText(currentSong.getName());

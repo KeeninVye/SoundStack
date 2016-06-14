@@ -44,7 +44,7 @@ class RetrieveSongFeed extends AsyncTask<String, String, Void> {
         query = s[0];
         try {
 
-            url = new URL(String.format("https://api.soundcloud.com/search?q=%s&facet=model&limit=50&offset=0&linked_partitioning=1&client_id=b535f6d6f6bee7d19945dfa4cfa082a6", Uri.encode(query)));
+            url = new URL(String.format("https://api.soundcloud.com/search?q=%s&facet=model&limit=100&offset=0&linked_partitioning=1&client_id=b535f6d6f6bee7d19945dfa4cfa082a6", Uri.encode(query)));
             urlConnection = (HttpURLConnection) url.openConnection();
             StringBuilder result = new StringBuilder();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
