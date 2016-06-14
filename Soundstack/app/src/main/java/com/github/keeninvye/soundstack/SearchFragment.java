@@ -28,8 +28,10 @@ public class SearchFragment extends Fragment {
 
     View rootView;
     View itemView;
-    public ListView searchview_listview;
+    LayoutInflater searchInflater;
+    public ListView listview_search;
     public List<Song> Songs = new ArrayList<Song>();
+
 
     public SearchFragment() {
         super();
@@ -37,9 +39,10 @@ public class SearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        searchInflater = inflater;
         rootView = inflater.inflate(R.layout.fragment_searchlist, container, false);
-        searchview_listview = (ListView) rootView.findViewById(R.id.listview_search);
-        itemView = inflater.inflate(R.layout.listview_song, container, false);
+        listview_search = (ListView) rootView.findViewById(R.id.listview_search);
+        //itemView = inflater.inflate(R.layout.listview_song, container, false);
 
         return rootView;
     }
@@ -50,7 +53,7 @@ public class SearchFragment extends Fragment {
 
     public void populateSearch() {
         ArrayAdapter<Song> adapter = new SongAdapter();
-        searchview_listview.setAdapter(adapter);
+        listview_search.setAdapter(adapter);
         Log.d("SEARCH", Songs.toString());
     }
 
@@ -62,13 +65,14 @@ public class SearchFragment extends Fragment {
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if(view == null){
-                view = itemView;
+                view = searchInflater.inflate(R.layout.listview_song, parent, false);
             }
             Song currentSong = Songs.get(position);
             TextView title = (TextView) view.findViewById(R.id.title);
             ImageView artwork = (ImageView) view.findViewById(R.id.artwork);
             title.setText(currentSong.getName());
             artwork.setImageBitmap(currentSong.getArtwork());
+            Log.d("SEARCH", currentSong.getName());
 
             return view;
         }
