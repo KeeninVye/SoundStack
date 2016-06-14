@@ -1,6 +1,6 @@
 package com.github.keeninvye.soundstack;
 
-import com.github.keeninvye.soundstack.MainActivity;
+import com.github.keeninvye.soundstack.SearchFragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,12 +32,15 @@ class RetrieveSongFeed extends AsyncTask<String, String, Void> {
     HttpURLConnection urlConnection;
     JSONObject jObj = null;
     JSONArray songs = null;
+    SearchFragment searchFragment;
 
-    public RetrieveSongFeed(){
+    public RetrieveSongFeed(SearchFragment searchFragment){
         super();
+        this.searchFragment = searchFragment;
     }
 
     protected Void doInBackground(String... s) {
+        Log.d("SEARCH", "doInBackground");
         query = s[0];
         try {
 
@@ -55,7 +58,7 @@ class RetrieveSongFeed extends AsyncTask<String, String, Void> {
             jObj = new JSONObject(result.toString());
 
         }catch( Exception e) {
-            e.printStackTrace();
+            Log.d("SEARCH", e.toString());
         }
         finally {
             urlConnection.disconnect();
@@ -65,8 +68,10 @@ class RetrieveSongFeed extends AsyncTask<String, String, Void> {
     }
 
     public JSONObject createSongs(JSONObject obj){
+        Log.d("SEARCH", "createSongs");
         try {
             songs = obj.getJSONArray("collection");
+            Log.d("SEARCH", "Trying to get Artwork");
             for(int i = 0; i < songs.length(); i++) {
                 JSONObject c = songs.getJSONObject(i);
                 if(c.getString("kind").equals("track") && c.has("stream_url") && !c.getString("artwork_url").equals("null")){
@@ -85,9 +90,9 @@ class RetrieveSongFeed extends AsyncTask<String, String, Void> {
                         bis.close();
                         is.close();
                     } catch (IOException e) {
-                        Log.e("ARTWORK", "Error getting bitmap", e);
+                        Log.e("SEARCH", "Error getting bitmap", e);
                     }
-                    //addSong(title, stream, artwork);
+                    searchFragment.addSong(title, stream, artwork);
                 }
             }
         } catch (JSONException e) {
@@ -98,6 +103,7 @@ class RetrieveSongFeed extends AsyncTask<String, String, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        //populateSearch();
+        Log.d("SEARCH", "Populating Search");
+        searchFragment.populateSearch();
     }
 }

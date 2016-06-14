@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     List<Song> Songs = new ArrayList<Song>();
 
+    SearchFragment playlist_fragment = new SearchFragment();
+    SearchFragment search_fragment = new SearchFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Songs.clear();
-                //new RetrieveSongFeed().execute(query);
+                search_fragment.Songs.clear();
+                new RetrieveSongFeed(search_fragment).execute(query);
                 return true;
             }
 
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
+
         }
 
         /**
@@ -148,7 +151,12 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            if (position == 0) {
+                return PlaceholderFragment.newInstance(1);
+            } else if (position == 1) {
+                return search_fragment;
+            }
+            return playlist_fragment;
         }
 
         @Override
